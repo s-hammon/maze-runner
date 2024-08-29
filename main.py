@@ -1,36 +1,30 @@
-from tkinter import Tk, BOTH, Canvas
+import sys
 
+from graphics import Window
+from maze import Maze
 
 def main():
-    win = Window(800, 600)
+    num_rows = 9
+    num_cols = 12
+    margin = 50
+    screen_x = 800
+    screen_y = 600
+    cell_size_x = (screen_x - 2 * margin) / num_cols
+    cell_size_y = (screen_y - 2 * margin) / num_rows
+
+    sys.setrecursionlimit(10**3)
+
+    win = Window(screen_x, screen_y)
+    maze = Maze(
+        margin, margin, 
+        num_rows, num_cols, 
+        cell_size_x, cell_size_y,
+        win,
+        # 404
+    )
+    maze._break_entrance_and_exit()
+    maze.solve()
+
     win.wait_for_close()
 
-
-class Window:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-
-        self.__root = Tk()
-        self.__root.title("Maze Runner")
-        self.__root.protocol("WM_DELETE_WINDOW", self.close)
-
-        self.__canvas = Canvas()
-        self.__canvas.pack(fill=BOTH, expand=True)
-        self.__running = False
-
-    
-    def redraw(self):
-        self.__root.update_idletasks()
-        self.__root.update()
-
-    def wait_for_close(self):
-        self.__running = True
-        while self.__running:
-            self.redraw()
-
-    def close(self):
-        self.__running = False
-        
-if __name__ == "__main__":
-    main()
+main()
